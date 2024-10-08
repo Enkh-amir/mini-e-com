@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export const HeaderPage = () => {
+export const HeaderPage = ({itemNum}) => {
   const [theme, setTheme] = useState("light");
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -17,7 +17,26 @@ export const HeaderPage = () => {
         <div className="swap-off">LIGHTMODE</div>
       </label>
       <div className="card-actions justify-end">
-        <button className="btn btn-primary">My Cart</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => document.getElementById("my_modal_cart").showModal()}
+        >
+          My Cart
+        </button>
+        <dialog id="my_modal_cart" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">{itemNum}!</h3>
+            <p className="py-4">
+              Press ESC key or click the button below to close
+            </p>
+            <div className="modal-action">
+              <form method="dialog">
+                {/* if there is a button in form, it will close the modal */}
+                <button className="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
       </div>
     </div>
   );

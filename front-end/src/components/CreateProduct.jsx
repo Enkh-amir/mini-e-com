@@ -15,19 +15,21 @@ export const CreateModal = ({ setProducts }) => {
         },
         body: JSON.stringify(product),
       };
-      const response = await fetch(`${BACKEND_ENDPOINT}/product`, options);
+      const response = await fetch(`http://localhost:4242/products`, options);
       const data = await response.json();
-      setProducts((prevProducts) => [...prevProducts, data.product]);
+      setProducts((prevProducts) => [...prevProducts, data]);
     } catch {
       console.log("error");
     }
 
     setProduct({
-      productName: "",
-      category: "",
+      name: "",
+      description: "",
       price: "",
+      image_url: "",
     });
-    document.getElementById("my_modal_1").close();
+    console.log(product)
+    document.getElementById("my_modal_create").close();
   };
 
   const handleInputChange = (event) => {
@@ -46,29 +48,29 @@ export const CreateModal = ({ setProducts }) => {
     <>
       <button
         className="btn"
-        onClick={() => document.getElementById("my_modal_1").showModal()}
+        onClick={() => document.getElementById("my_modal_create").showModal()}
       >
         Create product
       </button>
-      <dialog id="my_modal_1" className="modal">
+      <dialog id="my_modal_create" className="modal">
         <div className="modal-box">
           <h3 className="text-lg font-bold">Create product</h3>
           <div className="flex flex-col gap-3 mt-4">
             <input
-              name="productName"
+              name="name"
               onChange={handleInputChange}
               type="text"
               placeholder="name"
               className="w-full input input-bordered"
-              value={product?.productName}
+              value={product?.name}
             />
             <input
-              name="category"
+              name="description"
               onChange={handleInputChange}
               type="text"
               placeholder="Description"
               className="w-full input input-bordered"
-              value={product?.category}
+              value={product?.description}
             />
             <input
               name="price"
@@ -79,12 +81,12 @@ export const CreateModal = ({ setProducts }) => {
               value={product?.price}
             />
             <input
-              name="price"
+              name="image_url"
               onChange={handleInputChange}
               type="text"
               placeholder="image url"
               className="w-full input input-bordered"
-              value={product?.price}
+              value={product?.image_url}
             />
           </div>
 

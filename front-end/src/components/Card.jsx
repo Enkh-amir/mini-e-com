@@ -1,25 +1,27 @@
-export const Card = () => {
+export const Card = ({ product, handleSubmit }) => {
+  const { id, name, description, price, image_url } = product;
+
   return (
     <div className="card bg-base-100 w-96 shadow-xl">
       <figure>
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt="Shoes"
-        />
+        <img className="object-cover" src={image_url} alt="Shoes" />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">Shoes!</h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
+        <h2 className="card-title">{name}!</h2>
+        <p>{description}</p>
+        <p>${price}</p>
         <div className="card-actions justify-end">
           <button
             className="btn"
-            onClick={() => document.getElementById("my_modal_1").showModal()}
+            onClick={() =>
+              document.getElementById(`my_modal_${product.id}`).showModal()
+            }
           >
             More
           </button>
-          <dialog id="my_modal_1" className="modal">
+          <dialog id={`my_modal_${id}`} className="modal">
             <div className="modal-box">
-              <h3 className="font-bold text-lg">Hello!</h3>
+              <h3 className="font-bold text-lg">{product.name}!</h3>
               <p className="py-4">
                 Press ESC key or click the button below to close
               </p>
@@ -31,7 +33,7 @@ export const Card = () => {
               </div>
             </div>
           </dialog>
-          <button className="btn btn-primary">Add to Cart</button>
+          <button onClick={handleSubmit} className="btn btn-primary">Add to Cart</button>
         </div>
       </div>
     </div>
