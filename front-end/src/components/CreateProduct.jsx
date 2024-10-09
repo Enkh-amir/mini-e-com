@@ -17,7 +17,7 @@ export const CreateModal = ({ setProducts }) => {
       };
       const response = await fetch(`http://localhost:4242/products`, options);
       const data = await response.json();
-      setProducts((prevProducts) => [...prevProducts, data]);
+      // setProducts((prevProducts) => [...prevProducts, data]);
     } catch {
       console.log("error");
     }
