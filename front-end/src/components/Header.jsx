@@ -3,10 +3,47 @@ import { useEffect, useState } from "react";
 
 export const HeaderPage = ({ cart, onRemoveFromCart }) => {
   const [theme, setTheme] = useState("light");
-
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+  const [timestamp, setTimestamp] = useState("");
+
+  console.log(cart);
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const now = new Date();
+    const formattedTimestamp = now.toISOString();
+
+    try {
+      event.preventDefault();
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cart),
+      };
+      const response = await fetch(`http://localhost:4242/checkout`, options);
+      const data = await response.json();
+      // setProducts((prevProducts) => [...prevProducts, data]);
+    } catch {
+      console.log("error");
+    }
+
+
+    let total_amount = 0;
+    for (const item of Object.values(cart)) {
+        total_amount += parseFloat(item.price) * item.quantity; 
+    }
+
+    const updatedCart = { ...cart, order_date: formattedTimestamp, total_amount: total_amount };
+    setTimestamp(formattedTimestamp);
+    
+    console.log(updatedCart);
+};
+
 
   useEffect(() => {
     document.querySelector("html").setAttribute("data-theme", theme);
@@ -54,11 +91,15 @@ export const HeaderPage = ({ cart, onRemoveFromCart }) => {
                 ))
               )}
             </div>
-            <div className="modal-action">
-              <form method="dialog">
-                <button className="btn">Close</button>
-              </form>
-              <button className="btn btn-primary">Checkout</button>
+            <div className="flex justify-end items-center gap-4">
+              <div className="modal-action">
+                <form method="dialog">
+                  <button className="btn">Close</button>
+                </form>
+              </div>
+              <button onClick={handleSubmit} className="btn btn-primary mt-6">
+                Checkout
+              </button>
             </div>
           </div>
         </dialog>

@@ -21,6 +21,42 @@ app.get("/products", async (_, res) => {
   }
 });
 
+app.post("/checkout", async (req, res) => {
+  const {
+    order_date,
+    total_amount,
+
+    price,
+    quantity,
+    product_id,
+    order_id,
+  } = req.body;
+
+  console.log("req.body", req.body);
+
+  try {
+    const response = await sql`
+      INSERT INTO orders ( name, order_date, total_amount, customer_d)
+      VALUES ( ${customer_id}, ${order_date}, ${total_amount}, '1')
+      RETURNING *;
+
+      `;
+
+    // INSERT INTO order_items ( order_id, product_id, price)
+    // VALUES ( ${order_id}, ${product_id}, ${quantity}, ${price})
+    // RETURNING *;
+    res.status(201).json(response);
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
+
+  try {
+  } catch (error) {}
+});
+
 app.post("/products", async (req, res) => {
   const { name, description, price, image_url } = req.body;
 

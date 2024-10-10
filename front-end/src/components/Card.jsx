@@ -11,27 +11,30 @@ export const Card = ({ product, handleSubmit }) => {
         <p>{description}</p>
         <p>${price}</p>
         <div className="card-actions justify-end">
-          <button
-            className="btn"
-            onClick={() => document.getElementById(`my_modal_${product.id}`).showModal()}
-          >
-            More
-          </button>
-          <dialog id={`my_modal_${id}`} className="modal">
+          <a href={`#${product.id}`} className="btn">
+            more
+          </a>
+
+          <div className="modal" role="dialog" id={`${product.id}`}>
             <div className="modal-box">
               <h3 className="font-bold text-lg">{product.name}!</h3>
-              <p className="py-4">Press ESC key or click the button below to close</p>
+              <p className="py-4">This modal works with anchor links</p>
               <div className="modal-action">
-                <form method="dialog">
-                  <button className="btn">Close</button>
-                </form>
+                <a href="#" className="btn">
+                  Yay!
+                </a>
               </div>
             </div>
-          </dialog>
-          <button type="button" onClick={handleSubmit} className="btn btn-primary">Add to Cart</button>
+          </div>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="btn btn-primary"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
   );
 };
-
