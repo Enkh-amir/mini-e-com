@@ -10,40 +10,48 @@ export const HeaderPage = ({ cart, onRemoveFromCart }) => {
 
   console.log(cart);
 
-
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent default form submission
+
     const now = new Date();
-    const formattedTimestamp = now.toISOString();
+    const formattedTimestamp = now.toISOString(); 
+    document.getElementById("my_modal_cart").close();
+    // Calculate total amount
+    let total_amount = 0;
+    const items = Object.values(cart).map((item) => {
+      total_amount += parseFloat(item.price) * item.quantity;
+      return {
+        product_id: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      };
+    });
+
+    // Prepare the payload for the request
+    const updatedCart = {
+      order_date: formattedTimestamp,
+      total_amount: total_amount,
+      items: items, // This should be an array of items
+    };
 
     try {
-      event.preventDefault();
       const options = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(cart),
+        body: JSON.stringify(updatedCart), // Send the updatedCart object
       };
+
       const response = await fetch(`http://localhost:4242/checkout`, options);
       const data = await response.json();
-      // setProducts((prevProducts) => [...prevProducts, data]);
-    } catch {
-      console.log("error");
+      console.log(data); // Handle the response as needed
+    } catch (error) {
+      console.error("Error during checkout:", error);
     }
 
-
-    let total_amount = 0;
-    for (const item of Object.values(cart)) {
-        total_amount += parseFloat(item.price) * item.quantity; 
-    }
-
-    const updatedCart = { ...cart, order_date: formattedTimestamp, total_amount: total_amount };
-    setTimestamp(formattedTimestamp);
-    
-    console.log(updatedCart);
-};
-
+    setTimestamp(formattedTimestamp); // Optionally update timestamp state
+  };
 
   useEffect(() => {
     document.querySelector("html").setAttribute("data-theme", theme);

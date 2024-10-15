@@ -21,40 +21,63 @@ app.get("/products", async (_, res) => {
   }
 });
 
-app.post("/checkout", async (req, res) => {
-  const {
-    order_date,
-    total_amount,
+app.get("/checkout", async (_, res) => {
+  try {
+    const response = await sql`SELECT * FROM orders`;
+    res.json(response);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
-    price,
-    quantity,
-    product_id,
-    order_id,
-  } = req.body;
+app.get("/order_items", async (_, res) => {
+  try {
+    const response = await sql`SELECT * FROM order_items`;
+    res.json(response);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/checkout", async (req, res) => {
+  const { order_date, total_amount, items } = req.body;
+
+  // Manually define the customer_id
+  const customer_id = 1; // Replace this with the actual customer ID you want to use
 
   console.log("req.body", req.body);
 
   try {
-    const response = await sql`
-      INSERT INTO orders ( name, order_date, total_amount, customer_d)
-      VALUES ( ${customer_id}, ${order_date}, ${total_amount}, '1')
-      RETURNING *;
+    // Insert into orders
+    const orderResponse = await sql`
+      INSERT INTO orders (customer_id, order_date, total_amount)
+      VALUES (${customer_id}, ${order_date}, ${total_amount})
+      RETURNING id;
+    `;
 
+    const order_id = orderResponse[0].id; // Capture the order ID
+
+    // Prepare and execute order items insertions
+    const orderItemsQueries = items.map((item) => {
+      const { product_id, quantity, price } = item; // Destructure item details
+      return sql`
+        INSERT INTO order_items (order_id, product_id, quantity, price)
+        VALUES (${order_id}, ${product_id}, ${quantity}, ${price});
       `;
+    });
 
-    // INSERT INTO order_items ( order_id, product_id, price)
-    // VALUES ( ${order_id}, ${product_id}, ${quantity}, ${price})
-    // RETURNING *;
-    res.status(201).json(response);
+    // Execute all order item insertions in parallel
+    await Promise.all(orderItemsQueries);
+
+    res.status(201).json({ order_id });
   } catch (error) {
-    console.error("Error adding product:", error);
+    console.error("Error processing checkout:", error);
     res
       .status(500)
       .json({ error: "Internal Server Error", details: error.message });
   }
-
-  try {
-  } catch (error) {}
 });
 
 app.post("/products", async (req, res) => {
