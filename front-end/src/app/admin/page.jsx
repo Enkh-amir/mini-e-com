@@ -8,6 +8,10 @@ export default function Admin() {
   const [orders, setOrders] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const [error, setError] = useState(null); // State for error handling
+  const [theme, setTheme] = useState("light");
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   const fetchOrders = async () => {
     try {
@@ -93,9 +97,18 @@ export default function Admin() {
     return acc;
   }, {});
 
+  useEffect(() => {
+    document.querySelector("html").setAttribute("data-theme", theme);
+  }, [theme]);
+  
   return (
     <div className="w-full flex flex-col items-center py-7 gap-8">
       <CreateModal />
+      <label className="swap swap-rotate">
+        <input onClick={toggleTheme} type="checkbox" />
+        <div className="swap-on">DARKMODE</div>
+        <div className="swap-off">LIGHTMODE</div>
+      </label>
       {error && <div className="text-red-500">{error}</div>}{" "}
       <div className="overflow-x-auto flex flex-col gap-4">
         <div>Products</div>

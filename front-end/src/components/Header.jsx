@@ -49,7 +49,7 @@ export const HeaderPage = ({ cart, onRemoveFromCart }) => {
     } catch (error) {
       console.error("Error during checkout:", error);
     }
-
+    
     setTimestamp(formattedTimestamp); // Optionally update timestamp state
   };
 

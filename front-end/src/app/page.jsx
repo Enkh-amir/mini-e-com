@@ -18,6 +18,7 @@ const ProductList = () => {
     });
   };
 
+
   const fetchProducts = async () => {
     try {
       const response = await fetch(`http://localhost:4242/products`);

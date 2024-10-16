@@ -45,7 +45,7 @@ app.post("/checkout", async (req, res) => {
   const { order_date, total_amount, items } = req.body;
 
   // Manually define the customer_id
-  const customer_id = 1; // Replace this with the actual customer ID you want to use
+  const customer_id = 2; // Replace this with the actual customer ID you want to use
 
   console.log("req.body", req.body);
 
@@ -58,7 +58,6 @@ app.post("/checkout", async (req, res) => {
     `;
 
     const order_id = orderResponse[0].id; // Capture the order ID
-
     // Prepare and execute order items insertions
     const orderItemsQueries = items.map((item) => {
       const { product_id, quantity, price } = item; // Destructure item details
